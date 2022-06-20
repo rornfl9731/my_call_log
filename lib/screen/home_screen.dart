@@ -1,5 +1,10 @@
 import 'dart:collection';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../components/callLogs.dart';
+import '../provider/call_log_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final DateTimeRange selectedDateRange2;
-
   const HomeScreen({Key? key, required this.selectedDateRange2})
       : super(key: key);
 
@@ -20,15 +25,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
+  final controller = ScreenshotController();
   //final String TestUnitId = 'ca-app-pub-3940256099942544/6300978111';
 
   //BannerAd? banner;
+  late CallLogProvider _callLogProvider;
+
 
   DateTimeRange _selectedDateRange = DateTimeRange(
       start: DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day - 1),
+          DateTime.now().year, DateTime.now().month, DateTime.now().day),
       end: DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day + 3));
+          DateTime.now().year, DateTime.now().month, DateTime.now().day));
   final TextStyle whiteText = TextStyle(color: Colors.white);
   CallLogs cl = CallLogs();
 
@@ -40,33 +48,22 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     logs = cl.getToday(_selectedDateRange.start, _selectedDateRange.end);
-    // banner = BannerAd(
-    //     listener: BannerAdListener(
-    //       // Called when an ad is successfully received.
-    //       onAdLoaded: (Ad ad) => print('Ad loaded.'),
-    //       // Called when an ad request failed.
-    //       onAdFailedToLoad: (Ad ad, LoadAdError error) {
-    //         // Dispose the ad here to free resources.
-    //         ad.dispose();
-    //         print('Ad failed to load: $error');
-    //       },
-    //       // Called when an ad opens an overlay that covers the screen.
-    //       onAdOpened: (Ad ad) => print('Ad opened.'),
-    //       // Called when an ad removes an overlay that covers the screen.
-    //       onAdClosed: (Ad ad) => print('Ad closed.'),
-    //       // Called when an impression occurs on the ad.
-    //       onAdImpression: (Ad ad) => print('Ad impression.')),
-    //   size: AdSize.mediumRectangle,
-    //   adUnitId: TestUnitId,
-    //   request: AdRequest(),
-    // )..load();
-    // print(banner);
-    print("============================");
+
+
+  }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _callLogProvider = Provider.of<CallLogProvider>(context,listen: false);
+    _callLogProvider.loadLogs();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _callLogProvider.clearLogs();
+
 
     super.dispose();
   }
@@ -80,54 +77,71 @@ class _HomeScreenState extends State<HomeScreen>
     if (AppLifecycleState.resumed == state) {
       setState(() {
         logs = cl.getToday(_selectedDateRange.start, _selectedDateRange.end);
-        logs;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade800,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "통화 기록",
-          style: GoogleFonts.gaegu(
-              textStyle: TextStyle(color: Colors.white, fontSize: 25)),
-        ),
-        toolbarHeight: 60,
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await Share.share("공유하기 테스트");
-              },
-              icon: Icon(Icons.share)),
-          IconButton(
-            onPressed: () {
-              //함수넣어야지 퓨처
-              _show();
+    //print(Provider.of<CallLogProvider>(context).getLogs.length);
+    return Screenshot(
+      controller: controller,
+      child: Container(
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: appBar(),
+            body: Consumer<CallLogProvider>(
+              builder: (BuildContext context,CallLogProvider value,child){
+                return Column(
+                  children: [
+                    FutureBuilder<Iterable<CallLogEntry>>(
+                        future: logs,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            Iterable<CallLogEntry>? entries = snapshot.data;
+                            return Ranking(entries!);
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
+                  ],
+                );
+              }
+
+            ),
+          ),
+      ),
+    );
+
+
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      title: Text(
+        "통화 기록",
+        style: GoogleFonts.gaegu(
+            textStyle: TextStyle(color: Colors.black, fontSize: 25)),
+      ),
+      toolbarHeight: 60,
+      actions: [
+        IconButton(
+            onPressed: () async {
+              final image = await controller.capture();
+              saveAndShare(image!);
             },
-            icon: Icon(Icons.calendar_month),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          FutureBuilder<Iterable<CallLogEntry>>(
-              future: logs,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Iterable<CallLogEntry>? entries = snapshot.data;
-                  return Ranking(entries!);
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }),
-        ],
-      ),
+            icon: Icon(Icons.share,color: Colors.black,)),
+        IconButton(
+          onPressed: () {
+            //함수넣어야지 퓨처
+            _show();
+          },
+          icon: Icon(Icons.calendar_month,color: Colors.black,),
+        )
+      ],
     );
   }
 
@@ -141,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
 
     if (result != null) {
+      _callLogProvider.setDateRange(result);
       // Rebuild the UI
       setState(() {
         _selectedDateRange = result;
@@ -152,8 +167,10 @@ class _HomeScreenState extends State<HomeScreen>
   Ranking(Iterable<CallLogEntry> entry) {
     if (entry.isNotEmpty) {
       Map my_map = {};
+      //rs는 통화 기록을 저장하는 리스트
       var rs = entry.fold(0, (previousValue, element) {
         if (my_map.containsKey(element.number)) {
+          // 0은 통화시간, 1은 이름, 2는 번호, 3은 통화 횟수
           my_map[element.number][0] += element.duration;
           my_map[element.number][3] += 1;
         } else {
@@ -166,22 +183,25 @@ class _HomeScreenState extends State<HomeScreen>
         }
         return element.duration! + (previousValue as num);
       });
+      //통화 시간을 기준으로 정렬
       final sortedValuesDesc = SplayTreeMap<String, dynamic>.from(my_map,
-              (keys1, keys2) => my_map[keys2][0]!.compareTo(my_map[keys1][0]!));
+          (keys1, keys2) => my_map[keys2][0]!.compareTo(my_map[keys1][0]!));
 
+      //통화 횟수를 기준으로 정렬
       final sortedValuesDesc2 = SplayTreeMap<String, dynamic>.from(my_map,
-              (keys1, keys2) => my_map[keys2][3]!.compareTo(my_map[keys1][3]!));
+          (keys1, keys2) => my_map[keys2][3]!.compareTo(my_map[keys1][3]!));
 
       var todayBest;
       var todayBest2;
       if (entry.length > 0) {
-        todayBest = sortedValuesDesc.values.toList()[0][1];
-        if (todayBest == null) {
-          todayBest = sortedValuesDesc.values.toList()[0][2];
+        todayBest = sortedValuesDesc.values.toList()[0][1]; //통화 시간 1위의 이름
+        if (todayBest == null || todayBest == "") {
+          todayBest = sortedValuesDesc.values.toList()[0][2]; // 이름이 없으면 번호
         }
       } else {
         todayBest = "";
       }
+
       var toHour;
       var toMin;
       var toSec;
@@ -226,13 +246,6 @@ class _HomeScreenState extends State<HomeScreen>
         sec = rs;
       }
 
-      //return //Container(
-      // alignment: Alignment.center,
-      // child: AdWidget(ad: banner!,),
-      // width: banner!.size.width.toDouble(),
-      // height: banner!.size.height.toDouble(),
-      //);
-
       return SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -248,62 +261,55 @@ class _HomeScreenState extends State<HomeScreen>
                           Text(cl.getDate(_selectedDateRange.start),
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: Colors.black,
                               )),
                           Text("~",
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Colors.white,
+                                color: Colors.black,
                               )),
                           Text(cl.getDate(_selectedDateRange.end),
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: Colors.black,
                               )),
                         ],
                       ),
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   child: AdWidget(ad: banner!,),
-                      //   width: banner!.size.width.toDouble(),
-                      //   height: banner!.size.height.toDouble(),
-                      // ),
-
                       const SizedBox(height: 10.0),
                       Nemo(
                           entry,
-                          "오늘의 통화시간",
+                          "통화시간",
                           entry.isNotEmpty
                               ? (isHour
-                              ? Text(
-                              "${hour.toString()}시간 ${min.toString()}분 ${sec}초",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
-                              : isMin
-                              ? Text("${min.toString()}분 ${sec}초",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
-                              : Text("${sec}초",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              )))
+                                  ? Text(
+                                      "${hour.toString()}시간 ${min.toString()}분 ${sec}초",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.black,
+                                      ))
+                                  : isMin
+                                      ? Text("${min.toString()}분 ${sec}초",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                          ))
+                                      : Text("${sec}초",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                          )))
                               : Text('없음'),
                           Colors.deepOrangeAccent),
                       const SizedBox(height: 10.0),
                       Nemo(
                           entry,
-                          "오늘의 통화건수",
+                          "통화건수",
                           entry.isNotEmpty
                               ? Text("${entry.length.toString()} 건",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                  ))
                               : Text('없음'),
                           Colors.green),
                       const SizedBox(height: 10.0),
@@ -312,24 +318,24 @@ class _HomeScreenState extends State<HomeScreen>
                           "누구랑 가장 오래 통화했어?",
                           entry.isNotEmpty
                               ? (toIsHour
-                              ? Text(
-                              "${toHour.toString()}시간 ${toMin.toString()}분 ${toSec}초 with ${todayBest}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
-                              : toIsMin
-                              ? Text(
-                              "${toMin.toString()}분 ${toSec}초 with ${todayBest}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
-                              : Text("${toSec}초 with ${todayBest}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              )))
+                                  ? Text(
+                                      "${toHour.toString()}시간 ${toMin.toString()}분 ${toSec}초 with ${todayBest}",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.white,
+                                      ))
+                                  : toIsMin
+                                      ? Text(
+                                          "${toMin.toString()}분 ${toSec}초 with ${todayBest}",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                          ))
+                                      : Text("${toSec}초 with ${todayBest}",
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.white,
+                                          )))
                               : Text('없음'),
                           Colors.blue),
                       const SizedBox(height: 10.0),
@@ -338,11 +344,11 @@ class _HomeScreenState extends State<HomeScreen>
                           '누구랑 가장 여러번 통화했어?',
                           entry.isNotEmpty
                               ? Text(
-                              "${sortedValuesDesc2.values.toList()[0][3]}통 with ${sortedValuesDesc2.values.toList()[0][1]}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.white,
-                              ))
+                                  "${sortedValuesDesc2.values.toList()[0][3]}통 with ${sortedValuesDesc2.values.toList()[0][1]==null  || sortedValuesDesc2.values.toList()[0][1]=='' ? sortedValuesDesc2.values.toList()[0][2] : sortedValuesDesc2.values.toList()[0][1]}",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: Colors.white,
+                                  ))
                               : Text('없음'),
                           Colors.orange),
                     ],
@@ -363,10 +369,17 @@ class _HomeScreenState extends State<HomeScreen>
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Text(_selectedDateRange.toString()),
+                      Text(
+                        "${cl.getDate(_selectedDateRange.start)}~${cl.getDate(_selectedDateRange.end)}",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8,),
                       Nemo(
                         entry,
-                        "오늘의 통화시간",
+                        "통화시간",
                         Text('없음',
                             style: TextStyle(
                               fontSize: 24,
@@ -377,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const SizedBox(height: 10.0),
                       Nemo(
                         entry,
-                        "오늘의 통화건수",
+                        "통화건수",
                         Text('없음',
                             style: TextStyle(
                               fontSize: 24,
@@ -425,34 +438,72 @@ class _HomeScreenState extends State<HomeScreen>
         color: color,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            title: Text(
-              "${titleName}",
-              style: GoogleFonts.gaegu(
-                  textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      decoration: TextDecoration.underline)),
+      child: GestureDetector(
+        onTap: (){showModalBottomSheet(context: context, builder: (builder)=>bottomSheet(titleName, result));},
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                "${titleName}",
+                style: GoogleFonts.gaegu(
+                    textStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        decoration: TextDecoration.underline)),
+              ),
+              trailing: Icon(
+                Icons.how_to_vote,
+                color: Colors.white,
+              ),
             ),
-            trailing: Icon(
-              Icons.how_to_vote,
-              color: Colors.white,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            // child: Text("${entry.length.toString()} 건",
-            child: result,
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              // child: Text("${entry.length.toString()} 건",
+              child: result,
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  BottomSheet bottomSheet(titleName, result) {
+    return BottomSheet(
+              builder: (context)=>Container(
+                color: Colors.black,
+                height: MediaQuery.of(context).size.height*0.8,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      titleName,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 8,),
+                    result,
+                    Column(
+                      children : [Text(_callLogProvider.getLogs.length.toString(),style: TextStyle(
+                        color: Colors.white,
+                      ),),]
+                    )
+                  ],
+                ),
+              ), onClosing: () {  },
+            );
   }
 
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  Future saveAndShare(Uint8List image) async{
+    final directory = (await getApplicationDocumentsDirectory ()).path;
+    final file = File('${directory}/image.png');
+    await file.writeAsBytes(image);
+    await Share.shareFiles([file.path]);
+
+  }
 }

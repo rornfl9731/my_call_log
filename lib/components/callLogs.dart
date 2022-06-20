@@ -48,9 +48,9 @@ class CallLogs {
     return CallLog.get();
   }
 
-  Future<Iterable<CallLogEntry>> getJW() {
+  Future<Iterable<CallLogEntry>> getJW(number) {
     return CallLog.query(
-        number: "01099829397"
+        number: number
     );
   }
 
@@ -76,9 +76,9 @@ class CallLogs {
   getTitle(CallLogEntry entry) {
     if (entry.name == null) return Text(entry.number!,style: TextStyle(color: Colors.white));
     if (entry.name!.isEmpty)
-      return Text(entry.number!,style: TextStyle(color: Colors.white));
+      return Text(entry.number!,style: TextStyle(color: Colors.black));
     else
-      return Text(entry.name!,style: TextStyle(color: Colors.white));
+      return Text(entry.name!,style: TextStyle(color: Colors.black));
   }
 
   String getTime(int duration) {
