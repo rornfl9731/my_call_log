@@ -50,9 +50,9 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
         centerTitle: true,
         title: Text(
           '전화 기록',
-          style: GoogleFonts.gaegu(
-              textStyle: TextStyle(color: Colors.black, fontSize: 25)),
-        ),
+          style:
+              TextStyle(color: Colors.black, fontSize: 25,fontWeight: FontWeight.bold)),
+
         toolbarHeight: 60,
         backgroundColor: Colors.transparent,
         elevation: 0,

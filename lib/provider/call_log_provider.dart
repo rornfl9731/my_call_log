@@ -19,7 +19,11 @@ class CallLogProvider extends ChangeNotifier {
     _logs = [];
   }
 
-  DateTimeRange _dateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  DateTimeRange _dateRange = DateTimeRange(
+      start: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day),
+      end: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
   DateTimeRange setDateRange(DateTimeRange dateRange) {
     _dateRange = dateRange;

@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    logs = cl.getToday(_selectedDateRange.start, _selectedDateRange.end);
+
 
 
   }
@@ -55,7 +55,9 @@ class _HomeScreenState extends State<HomeScreen>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+
     _callLogProvider = Provider.of<CallLogProvider>(context,listen: false);
+    logs = cl.getToday(_callLogProvider.getDateRange.start, _callLogProvider.getDateRange.end);
     _callLogProvider.loadLogs();
   }
 
@@ -123,9 +125,9 @@ class _HomeScreenState extends State<HomeScreen>
       centerTitle: true,
       title: Text(
         "통화 기록",
-        style: GoogleFonts.gaegu(
-            textStyle: TextStyle(color: Colors.black, fontSize: 25)),
-      ),
+        style:
+            TextStyle(color: Colors.black, fontSize: 25,fontWeight: FontWeight.bold)),
+
       toolbarHeight: 60,
       actions: [
         IconButton(
@@ -159,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen>
       // Rebuild the UI
       setState(() {
         _selectedDateRange = result;
-        logs = cl.getToday(_selectedDateRange.start, _selectedDateRange.end);
+        logs = cl.getToday(_callLogProvider.getDateRange.start, _callLogProvider.getDateRange.end);
       });
     }
   }
@@ -258,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(cl.getDate(_selectedDateRange.start),
+                          Text(cl.getDate(_callLogProvider.getDateRange.start),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
@@ -268,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 fontSize: 24,
                                 color: Colors.black,
                               )),
-                          Text(cl.getDate(_selectedDateRange.end),
+                          Text(cl.getDate(_callLogProvider.getDateRange.end),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
@@ -369,12 +371,25 @@ class _HomeScreenState extends State<HomeScreen>
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Text(
-                        "${cl.getDate(_selectedDateRange.start)}~${cl.getDate(_selectedDateRange.end)}",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(cl.getDate(_callLogProvider.getDateRange.start),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                          Text("~",
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.black,
+                              )),
+                          Text(cl.getDate(_callLogProvider.getDateRange.end),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                              )),
+                        ],
                       ),
                       SizedBox(height: 8,),
                       Nemo(
