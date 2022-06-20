@@ -15,6 +15,7 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
   //Iterable<CallLogEntry> entries;
   CallLogs cl = CallLogs();
   late Future<Iterable<CallLogEntry>> logs;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -70,180 +71,189 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Scrollbar(
+                        interactive: true,
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        controller: _scrollController,
                         thickness: 10,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            //print(cl.getDate(new DateTime.fromMillisecondsSinceEpoch(entries!.elementAt(index).timestamp!)));
-                            final aa = cl.getDate(
-                                new DateTime.fromMillisecondsSinceEpoch(
-                                    entries!.elementAt(index).timestamp!));
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
+                          child: ListView.builder(
 
-                            if (index == 0) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    aa.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 25),
-                                  ),
-                                  GestureDetector(
-                                    child: Card(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.black, width: 3),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(12)),
-                                      ),
-                                      child: ListTile(
-                                        leading: cl.getAvator(
-                                            entries.elementAt(index).callType!),
-                                        title: cl
-                                            .getTitle(entries.elementAt(index)),
-                                        subtitle: Text(
-                                          cl.formatDate(new DateTime
-                                                      .fromMillisecondsSinceEpoch(
-                                                  entries
-                                                      .elementAt(index)
-                                                      .timestamp!)) +
-                                              "\n" +
-                                              cl.getTime(entries
-                                                  .elementAt(index)
-                                                  .duration!),
-                                          style: TextStyle(color: Colors.black),
+                            controller: _scrollController,
+                            itemBuilder: (context, index) {
+                              //print(cl.getDate(new DateTime.fromMillisecondsSinceEpoch(entries!.elementAt(index).timestamp!)));
+                              final aa = cl.getDate(
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      entries!.elementAt(index).timestamp!));
+
+                              if (index == 0) {
+                                return Column(
+                                  children: [
+                                    Text(
+                                      aa.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 25),
+                                    ),
+                                    GestureDetector(
+                                      child: Card(
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black, width: 3),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(12)),
                                         ),
-                                        isThreeLine: true,
-                                        trailing: IconButton(
-                                            icon: Icon(Icons.phone),
-                                            color: Colors.green,
-                                            onPressed: () {
-                                              //cl.call(entries.elementAt(index).number!);
-                                            }),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                        child: ListTile(
+                                          leading: cl.getAvator(
+                                              entries.elementAt(index).callType!),
+                                          title: cl
+                                              .getTitle(entries.elementAt(index)),
+                                          subtitle: Text(
+                                            cl.formatDate(new DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                    entries
+                                                        .elementAt(index)
+                                                        .timestamp!)) +
+                                                "\n" +
+                                                cl.getTime(entries
+                                                    .elementAt(index)
+                                                    .duration!),
+                                            style: TextStyle(color: Colors.black),
                                           ),
-                                          context: context,
-                                          builder: (builder) =>
-                                              buildBottomSheet(entries, index));
-                                    },
-                                  ),
-                                ],
-                              );
-                            } else if (aa ==
-                                cl.getDate(
-                                    new DateTime.fromMillisecondsSinceEpoch(
-                                        entries
-                                            .elementAt(index - 1)
-                                            .timestamp!))) {
-                              return GestureDetector(
-                                child: Card(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.black, width: 3),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(12)),
-                                  ),
-                                  child: ListTile(
-                                    leading: cl.getAvator(
-                                        entries.elementAt(index).callType!),
-                                    title:
-                                        cl.getTitle(entries.elementAt(index)),
-                                    subtitle: Text(
-                                      cl.formatDate(new DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                              entries
-                                                  .elementAt(index)
-                                                  .timestamp!)) +
-                                          "\n" +
-                                          cl.getTime(entries
-                                              .elementAt(index)
-                                              .duration!),
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    isThreeLine: true,
-                                    trailing: IconButton(
-                                        icon: Icon(Icons.phone),
-                                        color: Colors.green,
-                                        onPressed: () {
-                                          //cl.call(entries.elementAt(index).number!);
-                                        }),
-                                  ),
-                                ),
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      context: context,
-                                      builder: (builder) =>
-                                          buildBottomSheet(entries, index));
-                                },
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  Text(
-                                    aa.toString(),
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 25),
-                                  ),
-                                  GestureDetector(
-                                    child: Card(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.black, width: 3),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(12)),
-                                      ),
-                                      child: ListTile(
-                                        leading: cl.getAvator(
-                                            entries.elementAt(index).callType!),
-                                        title: cl
-                                            .getTitle(entries.elementAt(index)),
-                                        subtitle: Text(
-                                          cl.formatDate(new DateTime
-                                                      .fromMillisecondsSinceEpoch(
-                                                  entries
-                                                      .elementAt(index)
-                                                      .timestamp!)) +
-                                              "\n" +
-                                              cl.getTime(entries
-                                                  .elementAt(index)
-                                                  .duration!),
-                                          style: TextStyle(color: Colors.black),
+                                          isThreeLine: true,
+                                          trailing: IconButton(
+                                              icon: Icon(Icons.phone),
+                                              color: Colors.green,
+                                              onPressed: () {
+                                                //cl.call(entries.elementAt(index).number!);
+                                              }),
                                         ),
-                                        isThreeLine: true,
-                                        trailing: IconButton(
-                                            icon: Icon(Icons.phone),
-                                            color: Colors.green,
-                                            onPressed: () {
-                                              //cl.call(entries.elementAt(index).number!);
-                                            }),
                                       ),
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            context: context,
+                                            builder: (builder) =>
+                                                buildBottomSheet(entries, index));
+                                      },
                                     ),
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          context: context,
-                                          builder: (builder) =>
-                                              buildBottomSheet(entries, index));
-                                    },
+                                  ],
+                                );
+                              } else if (aa ==
+                                  cl.getDate(
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          entries
+                                              .elementAt(index - 1)
+                                              .timestamp!))) {
+                                return GestureDetector(
+                                  child: Card(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.black, width: 3),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12)),
+                                    ),
+                                    child: ListTile(
+                                      leading: cl.getAvator(
+                                          entries.elementAt(index).callType!),
+                                      title:
+                                          cl.getTitle(entries.elementAt(index)),
+                                      subtitle: Text(
+                                        cl.formatDate(new DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                entries
+                                                    .elementAt(index)
+                                                    .timestamp!)) +
+                                            "\n" +
+                                            cl.getTime(entries
+                                                .elementAt(index)
+                                                .duration!),
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      isThreeLine: true,
+                                      trailing: IconButton(
+                                          icon: Icon(Icons.phone),
+                                          color: Colors.green,
+                                          onPressed: () {
+                                            //cl.call(entries.elementAt(index).number!);
+                                          }),
+                                    ),
                                   ),
-                                ],
-                              );
-                            }
-                          },
-                          itemCount: entries!.length,
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        context: context,
+                                        builder: (builder) =>
+                                            buildBottomSheet(entries, index));
+                                  },
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    Text(
+                                      aa.toString(),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 25),
+                                    ),
+                                    GestureDetector(
+                                      child: Card(
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black, width: 3),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                        child: ListTile(
+                                          leading: cl.getAvator(
+                                              entries.elementAt(index).callType!),
+                                          title: cl
+                                              .getTitle(entries.elementAt(index)),
+                                          subtitle: Text(
+                                            cl.formatDate(new DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                    entries
+                                                        .elementAt(index)
+                                                        .timestamp!)) +
+                                                "\n" +
+                                                cl.getTime(entries
+                                                    .elementAt(index)
+                                                    .duration!),
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                          isThreeLine: true,
+                                          trailing: IconButton(
+                                              icon: Icon(Icons.phone),
+                                              color: Colors.green,
+                                              onPressed: () {
+                                                //cl.call(entries.elementAt(index).number!);
+                                              }),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            context: context,
+                                            builder: (builder) =>
+                                                buildBottomSheet(entries, index));
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                            itemCount: entries!.length,
+                          ),
                         ),
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -78,32 +79,32 @@ class _HomeScreen2State extends State<HomeScreen2> with WidgetsBindingObserver {
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: GestureDetector(
-              onTap:(){},
-              child :Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      "asd",
-                      style: GoogleFonts.gaegu(
-                          textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              decoration: TextDecoration.underline)),
+                onTap: () {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(
+                        "asd",
+                        style: GoogleFonts.gaegu(
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                decoration: TextDecoration.underline)),
+                      ),
+                      trailing: Icon(
+                        Icons.how_to_vote,
+                        color: Colors.white,
+                      ),
                     ),
-                    trailing: Icon(
-                      Icons.how_to_vote,
-                      color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      // child: Text("${entry.length.toString()} 건",
+                      child: Text("asd"),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    // child: Text("${entry.length.toString()} 건",
-                    child: Text("asd"),
-                  )
-                ],
 
-              )
+                  ],
+                )
             ),
           )
         ],

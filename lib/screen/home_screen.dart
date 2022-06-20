@@ -48,8 +48,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-
-
   }
   @override
   void didChangeDependencies() {
@@ -78,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (AppLifecycleState.resumed == state) {
       setState(() {
-        logs = cl.getToday(_selectedDateRange.start, _selectedDateRange.end);
+        logs = cl.getToday(_callLogProvider.getDateRange.start, _callLogProvider.getDateRange.end);
       });
     }
   }
@@ -287,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       "${hour.toString()}시간 ${min.toString()}분 ${sec}초",
                                       style: TextStyle(
                                         fontSize: 24,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ))
                                   : isMin
                                       ? Text("${min.toString()}분 ${sec}초",

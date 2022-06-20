@@ -60,11 +60,11 @@ class _MyAppState extends State<MyApp> {
                 selectedItemColor: Colors.blue,
                 currentIndex: _currentIndex,
                 items: [
-                  new BottomNavigationBarItem(icon: Icon(Icons.call), label: "as"),
+                  new BottomNavigationBarItem(icon: Icon(Icons.call), label: "기록"),
                   new BottomNavigationBarItem(
-                      icon: Icon(Icons.today), label: "as2"),
+                      icon: Icon(Icons.today), label: "탑"),
                   new BottomNavigationBarItem(
-                      icon: Icon(Icons.dashboard_rounded), label: "as3")
+                      icon: Icon(Icons.dashboard_rounded), label: "탑탑")
                 ],
               ),
             )),
