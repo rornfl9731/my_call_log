@@ -96,6 +96,14 @@ class CallLogs {
       return Text(entry.name!,style: TextStyle(color: Colors.black));
   }
 
+  getNames(CallLogEntry entry) {
+    if (entry.name == null || entry.name =="") {return entry.number.toString();}
+    if (entry.name!.isEmpty)
+      return entry.number.toString();
+    else
+      return entry.name;
+  }
+
   String getTime(int duration) {
     Duration d1 = Duration(seconds: duration);
     String formatedDuration = "";

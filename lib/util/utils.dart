@@ -82,15 +82,15 @@ List PersonalLogs(Iterable<CallLogEntry> entry) {
 });
   String callTimeKo = TimeCalculate(callTime); // 통화 시간
 
-  Map inAndOut = {"수신" : [0,"0"], "발신" : [0,"0"],};
+  Map inAndOut = {"수신" : [0,"0",0], "발신" : [0,"0",0],};
   Map inAndOutRow = {"수신" : [0,0], "발신" : [0,0],};
 
   //요일별  0: 통화수  1 : 통화시간
-  Map byWeekday = {"Mon":["0","0"],"Tue":["0","0"],"Wed":["0","0"],"Thu":["0","60"],"Fri":["0","0"],"Sat":["0","0"],"Sun":["0","0"]};
+  Map byWeekday = {"Mon":[0,"0",0],"Tue":[0,"0",0],"Wed":[0,"0",0],"Thu":[0,"0",0],"Fri":[0,"0",0],"Sat":[0,"0",0],"Sun":[0,"0",0]};
   Map byWeekdayRaw = {"Mon":[0,0],"Tue":[0,0],"Wed":[0,0],"Thu":[0,0],"Fri":[0,0],"Sat":[0,0],"Sun":[0,0]};
   List timeZone = [6,12,18,22,24];
   //통화 시작 시간 기준.
-  Map byTimeZone = {"새벽":[0,"0"],"오전":[0,"0"],"오후":[0,"0"],"저녁":[0,"0"],"밤":[0,"0"],};
+  Map byTimeZone = {"새벽":[0,"0",0],"오전":[0,"0",0],"오후":[0,"0",0],"저녁":[0,"0",0],"밤":[0,"0",0],};
   Map byTimeZoneRow = {"새벽":[0,0],"오전":[0,0],"오후":[0,0],"저녁":[0,0],"밤":[0,0],};
 
 
@@ -102,9 +102,10 @@ List PersonalLogs(Iterable<CallLogEntry> entry) {
     byWeekdayRaw[dayOfWeek][1] += element.duration;
 
 
-    int a =int.parse(byWeekday[dayOfWeek][0]);
-    a += 1;
-    byWeekday[dayOfWeek][0] = "$a";
+    byWeekday[dayOfWeek][0] += 1;
+    // int a =int.parse(byWeekday[dayOfWeek][0]);
+    // a += 1;
+    // byWeekday[dayOfWeek][0] = "$a";
 
     int b = int.parse(byWeekday[dayOfWeek][1]);
     b += element.duration!;
@@ -191,23 +192,27 @@ List PersonalLogs(Iterable<CallLogEntry> entry) {
   });
 
   byWeekday.forEach((key, value) {
+    value[2] = int.parse(value[1]);
     value[1] = TimeCalculate(int.parse(value[1]));
   });
 
   inAndOut.forEach((key, value) {
+    value[2] = int.parse(value[1]);
     value[1] = TimeCalculate(int.parse(value[1]));
+
   });
 
   byTimeZone.forEach((key, value) {
+    value[2] = int.parse(value[1]);
     value[1] = TimeCalculate(int.parse(value[1]));
   });
 
-  print(byWeekdayRaw);
+
   print(byWeekday);
-  print(inAndOutRow);
+
   print(inAndOut);
   print(byTimeZone);
-  print(byTimeZoneRow);
+
 
 
 
