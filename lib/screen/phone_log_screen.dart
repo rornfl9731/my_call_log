@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_call_log/screen/personal_static_screen.dart';
 import 'dart:developer';
 
 import '../components/callLogs.dart';
@@ -49,11 +50,11 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          '전화 기록',
-          style:
-              TextStyle(color: Colors.black, fontSize: 25,fontWeight: FontWeight.bold)),
-
+        title: Text('전화 기록',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
         toolbarHeight: 60,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -77,9 +78,9 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                         controller: _scrollController,
                         thickness: 10,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 10),
                           child: ListView.builder(
-
                             controller: _scrollController,
                             itemBuilder: (context, index) {
                               //print(cl.getDate(new DateTime.fromMillisecondsSinceEpoch(entries!.elementAt(index).timestamp!)));
@@ -105,10 +106,11 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                               Radius.circular(12)),
                                         ),
                                         child: ListTile(
-                                          leading: cl.getAvator(
-                                              entries.elementAt(index).callType!),
-                                          title: cl
-                                              .getTitle(entries.elementAt(index)),
+                                          leading: cl.getAvator(entries
+                                              .elementAt(index)
+                                              .callType!),
+                                          title: cl.getTitle(
+                                              entries.elementAt(index)),
                                           subtitle: Text(
                                             cl.formatDate(new DateTime
                                                         .fromMillisecondsSinceEpoch(
@@ -119,7 +121,8 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                                 cl.getTime(entries
                                                     .elementAt(index)
                                                     .duration!),
-                                            style: TextStyle(color: Colors.black),
+                                            style:
+                                                TextStyle(color: Colors.black),
                                           ),
                                           isThreeLine: true,
                                           trailing: IconButton(
@@ -130,15 +133,26 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                               }),
                                         ),
                                       ),
+                                      // onTap: () {
+                                      //   showModalBottomSheet(
+                                      //       shape: RoundedRectangleBorder(
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(20),
+                                      //       ),
+                                      //       context: context,
+                                      //       builder: (builder) =>
+                                      //           buildBottomSheet(entries, index));
+                                      // },
                                       onTap: () {
-                                        showModalBottomSheet(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            context: context,
-                                            builder: (builder) =>
-                                                buildBottomSheet(entries, index));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  StaticScreen(
+                                                      test: entries
+                                                          .elementAt(index)
+                                                          .number),
+                                            ));
                                       },
                                     ),
                                   ],
@@ -187,7 +201,8 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                   onTap: () {
                                     showModalBottomSheet(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                         context: context,
                                         builder: (builder) =>
@@ -212,10 +227,11 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                               Radius.circular(12)),
                                         ),
                                         child: ListTile(
-                                          leading: cl.getAvator(
-                                              entries.elementAt(index).callType!),
-                                          title: cl
-                                              .getTitle(entries.elementAt(index)),
+                                          leading: cl.getAvator(entries
+                                              .elementAt(index)
+                                              .callType!),
+                                          title: cl.getTitle(
+                                              entries.elementAt(index)),
                                           subtitle: Text(
                                             cl.formatDate(new DateTime
                                                         .fromMillisecondsSinceEpoch(
@@ -226,7 +242,8 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                                 cl.getTime(entries
                                                     .elementAt(index)
                                                     .duration!),
-                                            style: TextStyle(color: Colors.black),
+                                            style:
+                                                TextStyle(color: Colors.black),
                                           ),
                                           isThreeLine: true,
                                           trailing: IconButton(
@@ -245,7 +262,8 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                             ),
                                             context: context,
                                             builder: (builder) =>
-                                                buildBottomSheet(entries, index));
+                                                buildBottomSheet(
+                                                    entries, index));
                                       },
                                     ),
                                   ],

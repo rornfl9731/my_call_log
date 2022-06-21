@@ -54,6 +54,12 @@ class CallLogs {
     );
   }
 
+  Future<Iterable<CallLogEntry>> getPersonal(number) {
+    return CallLog.query(
+        number: number
+    );
+  }
+
   Future<Iterable<CallLogEntry>> getToday(start,end) {
     return CallLog.query(
       // dateFrom: DateTime.now().subtract(Duration(hours: 10)).millisecondsSinceEpoch,
@@ -69,8 +75,17 @@ class CallLogs {
     return DateFormat('y년 MM월 dd일 HH시mm분').format(dt);
   }
 
+  String formatWeek(DateTime dt) {
+
+    return DateFormat('y년 MM월 dd일 HH시mm분').add_E().format(dt);
+  }
+
   String getDate(DateTime dt){
     return DateFormat('y년 MM월 dd일').format(dt);
+  }
+
+  String getHour(DateTime dt){
+    return DateFormat('h').format(dt);
   }
 
   getTitle(CallLogEntry entry) {

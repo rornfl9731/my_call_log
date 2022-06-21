@@ -7,11 +7,17 @@ import 'package:flutter/foundation.dart';
 
 class CallLogProvider extends ChangeNotifier {
   Iterable<CallLogEntry> _logs = [];
+  Iterable<CallLogEntry> personal_logs = [];
   CallLogs cl = CallLogs();
   Iterable<CallLogEntry> get getLogs => _logs;
 
   loadLogs() async {
     _logs = await cl.getCallLogs();
+    notifyListeners();
+  }
+
+  loadPersonalLogs(number) async {
+    personal_logs = await cl.getPersonal(number);
     notifyListeners();
   }
 
