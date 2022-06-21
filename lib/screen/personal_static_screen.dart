@@ -58,10 +58,11 @@ class _StaticScreenState extends State<StaticScreen>
                 Iterable<CallLogEntry>? entries = snapshot.data;
                 List kk = PersonalLogs(entries!);
                 // kk[3]
-                //print((kk[3]['수신'][0] as double));
+                double a = kk[3]['수신'][0].toDouble();
+                double b = kk[3]['발신'][0].toDouble();
                 Map<String, double> dataMap = {
-                  "수신": 3.0,
-                  "발신": 28.0,
+                  "수신": a,
+                  "발신": b,
                 };
 
                 return Center(
