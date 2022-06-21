@@ -89,7 +89,7 @@ class CallLogs {
   }
 
   getTitle(CallLogEntry entry) {
-    if (entry.name == null) return Text(entry.number!,style: TextStyle(color: Colors.white));
+    if (entry.name == null || entry.name =="") {return Text(entry.number!,style: TextStyle(color: Colors.black));}
     if (entry.name!.isEmpty)
       return Text(entry.number!,style: TextStyle(color: Colors.black));
     else
