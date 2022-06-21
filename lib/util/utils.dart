@@ -72,6 +72,7 @@ String getDayOfWeek(timestamp){
 // 2. 통화 건수
 // 3. 요일별 건수 및 시간
 // 4. 수신 / 발신 건수 및 시간
+// 5. 시간대별 건수 및 시간
 
 List PersonalLogs(Iterable<CallLogEntry> entry) {
   var weekDays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -207,6 +208,7 @@ List PersonalLogs(Iterable<CallLogEntry> entry) {
   print(inAndOut);
   print(byTimeZone);
   print(byTimeZoneRow);
+
 
 
   List k = [callCount,callTimeKo,byWeekday,inAndOut,byTimeZone];

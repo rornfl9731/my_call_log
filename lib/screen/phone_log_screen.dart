@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_call_log/screen/personal_static_screen.dart';
 import 'dart:developer';
 
@@ -22,6 +23,7 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    MobileAds.instance.initialize();
     WidgetsBinding.instance.addObserver(this);
     logs = cl.getCallLogs();
   }
@@ -44,6 +46,28 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
     }
   }
 
+  final BannerAd _banner = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (Ad ad) => print('Ad loaded.'),
+        // Called when an ad request failed.
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          // Dispose the ad here to free resources.
+          ad.dispose();
+          print('Ad failed to load: $error');
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) => print('Ad opened.'),
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) => print('Ad closed.'),
+        // Called when an impression occurs on the ad.
+        onAdImpression: (Ad ad) => print('Ad impression.'),
+      )
+  )..load();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +86,12 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
       body: Column(
         children: [
           //TextField(controller: t1, decoration: InputDecoration(labelText: "Phone number", contentPadding: EdgeInsets.all(10), suffixIcon: IconButton(icon: Icon(Icons.phone), onPressed: (){print("pressed");})),keyboardType: TextInputType.phone, textInputAction: TextInputAction.done, onSubmitted: (value) => call(value),),
+          Container(
+            alignment: Alignment.center,
+            child: AdWidget(ad: _banner,),
+            width: _banner.size.width.toDouble(),
+            height: _banner.size.height.toDouble(),
+          ),
           FutureBuilder<Iterable<CallLogEntry>>(
               future: logs,
               builder: (context, snapshot) {
@@ -198,15 +228,26 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                           }),
                                     ),
                                   ),
+                                  // onTap: () {
+                                  //   showModalBottomSheet(
+                                  //       shape: RoundedRectangleBorder(
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(20),
+                                  //       ),
+                                  //       context: context,
+                                  //       builder: (builder) =>
+                                  //           buildBottomSheet(entries, index));
+                                  // },
                                   onTap: () {
-                                    showModalBottomSheet(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        context: context,
-                                        builder: (builder) =>
-                                            buildBottomSheet(entries, index));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              StaticScreen(
+                                                  test: entries
+                                                      .elementAt(index)
+                                                      .number),
+                                        ));
                                   },
                                 );
                               } else {
@@ -254,16 +295,27 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
                                               }),
                                         ),
                                       ),
+                                      // onTap: () {
+                                      //   showModalBottomSheet(
+                                      //       shape: RoundedRectangleBorder(
+                                      //         borderRadius:
+                                      //             BorderRadius.circular(20),
+                                      //       ),
+                                      //       context: context,
+                                      //       builder: (builder) =>
+                                      //           buildBottomSheet(
+                                      //               entries, index));
+                                      // },
                                       onTap: () {
-                                        showModalBottomSheet(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            context: context,
-                                            builder: (builder) =>
-                                                buildBottomSheet(
-                                                    entries, index));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  StaticScreen(
+                                                      test: entries
+                                                          .elementAt(index)
+                                                          .number),
+                                            ));
                                       },
                                     ),
                                   ],

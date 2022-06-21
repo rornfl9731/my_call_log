@@ -1,7 +1,7 @@
 import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
 import 'package:my_call_log/util/utils.dart';
-
+import 'package:pie_chart/pie_chart.dart';
 import '../components/callLogs.dart';
 
 class StaticScreen extends StatefulWidget {
@@ -51,25 +51,32 @@ class _StaticScreenState extends State<StaticScreen>
       body: Container(
         color: Colors.white,
         child: FutureBuilder<Iterable<CallLogEntry>>(
-            future: logs,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done){
+          future: logs,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                Iterable<CallLogEntry>? entries = snapshot.data;
+                List kk = PersonalLogs(entries!);
+                // kk[3]
+                //print((kk[3]['수신'][0] as double));
+                Map<String, double> dataMap = {
+                  "수신": 3.0,
+                  "발신": 28.0,
+                };
 
-                if(snapshot.hasData){
-                  Iterable<CallLogEntry>? entries = snapshot.data;
-                  PersonalLogs(entries!);
-
-                  return Center(
-                    child: Text(snapshot.data!.length.toString()),
-                  );
-                }else{
-                  return Text("없음");
-                }
-
-              }else{
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: PieChart(
+                    dataMap: dataMap,
+                    legendOptions: LegendOptions(legendPosition: LegendPosition.bottom),
+                  ),
+                );
+              } else {
+                return Text('asd');
               }
-        },
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
     );

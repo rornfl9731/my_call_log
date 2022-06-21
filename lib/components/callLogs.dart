@@ -85,7 +85,7 @@ class CallLogs {
   }
 
   String getHour(DateTime dt){
-    return DateFormat('h').format(dt);
+    return DateFormat('H').format(dt);
   }
 
   getTitle(CallLogEntry entry) {
