@@ -3,6 +3,7 @@ import 'package:call_log/call_log.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_call_log/screen/personal_static_screen.dart';
 import 'dart:developer';
+
 import '../components/callLogs.dart';
 
 class PhonelogsScreen extends StatefulWidget {
@@ -17,12 +18,10 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
   late Future<Iterable<CallLogEntry>> logs;
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     WidgetsBinding.instance.addObserver(this);
     logs = cl.getCallLogs();
   }
@@ -47,8 +46,6 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
 
 
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,13 +64,7 @@ class _PhonelogsScreenState extends State<PhonelogsScreen>
       body: Column(
         children: [
           //TextField(controller: t1, decoration: InputDecoration(labelText: "Phone number", contentPadding: EdgeInsets.all(10), suffixIcon: IconButton(icon: Icon(Icons.phone), onPressed: (){print("pressed");})),keyboardType: TextInputType.phone, textInputAction: TextInputAction.done, onSubmitted: (value) => call(value),),
-          // Container(
-          //   alignment: Alignment.center,
-          //   //color: Colors.black,
-          //   child: AdWidget(ad: _banner,),
-          //   width: _banner.size.width*2,
-          //   height: _banner.size.height*2,
-          // ),
+
           FutureBuilder<Iterable<CallLogEntry>>(
               future: logs,
               builder: (context, snapshot) {

@@ -89,11 +89,19 @@ class CallLogs {
   }
 
   getTitle(CallLogEntry entry) {
-    if (entry.name == null) return Text(entry.number!,style: TextStyle(color: Colors.white));
+    if (entry.name == null || entry.name =="") {return Text(entry.number!,style: TextStyle(color: Colors.black));}
     if (entry.name!.isEmpty)
       return Text(entry.number!,style: TextStyle(color: Colors.black));
     else
       return Text(entry.name!,style: TextStyle(color: Colors.black));
+  }
+
+  getNames(CallLogEntry entry) {
+    if (entry.name == null || entry.name =="") {return entry.number.toString();}
+    if (entry.name!.isEmpty)
+      return entry.number.toString();
+    else
+      return entry.name;
   }
 
   String getTime(int duration) {
