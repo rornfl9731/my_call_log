@@ -452,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: GestureDetector(
-        onTap: (){showModalBottomSheet(context: context, builder: (builder)=>bottomSheet(titleName, result));},
+        //onTap: (){showModalBottomSheet(context: context, builder: (builder)=>bottomSheet(titleName, result));},
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

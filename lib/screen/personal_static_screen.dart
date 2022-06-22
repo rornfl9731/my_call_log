@@ -80,16 +80,16 @@ class _StaticScreenState extends State<StaticScreen>
                 Icons.share,
                 color: Colors.black,
               )),
-          IconButton(
-            onPressed: () {
-              //함수넣어야지 퓨처
-              //_show();
-            },
-            icon: Icon(
-              Icons.calendar_month,
-              color: Colors.black,
-            ),
-          )
+          // IconButton(
+          //   onPressed: () {
+          //     //함수넣어야지 퓨처
+          //     //_show();
+          //   },
+          //   icon: Icon(
+          //     Icons.calendar_month,
+          //     color: Colors.black,
+          //   ),
+          // )
         ],
       ),
       body: Screenshot(
@@ -158,16 +158,16 @@ class _StaticScreenState extends State<StaticScreen>
                         child: Column(
                           children: [
                             Text(
-                              "${cl.getNames(entries.first)} 통화 기록",
+                              "${cl.getNames(entries.first)} 통화 기록\n",
                               style: TextStyle(fontSize: 24),
                             ),
                             Text(
                               "통화 시간 : ${kk[1]}",
-                              style: TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 20),
                             ),
                             Text(
-                              "통화 수 : ${kk[0]}",
-                              style: TextStyle(fontSize: 24),
+                              "통화 수 : ${kk[0]}\n",
+                              style: TextStyle(fontSize: 20),
                             ),
                             Text(
                               "요일별",
@@ -268,58 +268,58 @@ class _StaticScreenState extends State<StaticScreen>
                               ],
                             ),
 
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                                    color: const Color(0xff81e5cd),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text("요일별 통화 건수"),
-                                                Container(
-                                                  height: 300,
-                                                  child: PersonalBarChart(data: kk[2],),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                                    color: const Color(0xff81e5cd),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text("요일별 통화 건수"),
-                                                Container(
-                                                  height: 300,
-                                                  child: PersonalBarChart(data: kk[2],),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: Card(
+                            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            //         color: const Color(0xff81e5cd),
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.all(8.0),
+                            //           child: Row(
+                            //             children: [
+                            //               Expanded(
+                            //                 child: Column(
+                            //                   children: [
+                            //                     Text("요일별 통화 건수"),
+                            //                     Container(
+                            //                       height: 300,
+                            //                       child: PersonalBarChart(data: kk[2],),
+                            //                     ),
+                            //                   ],
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Expanded(
+                            //       child: Card(
+                            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                            //         color: const Color(0xff81e5cd),
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.all(8.0),
+                            //           child: Row(
+                            //             children: [
+                            //               Expanded(
+                            //                 child: Column(
+                            //                   children: [
+                            //                     Text("요일별 통화 건수"),
+                            //                     Container(
+                            //                       height: 300,
+                            //                       child: PersonalBarChart(data: kk[2],),
+                            //                     ),
+                            //                   ],
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),

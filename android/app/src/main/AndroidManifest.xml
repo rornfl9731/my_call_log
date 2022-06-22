@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.my_call_log">
    <application
-        android:label="my_call_log"
+        android:label="나의 통화 기록"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/call">
         <activity
             android:name=".MainActivity"
             android:exported="true"

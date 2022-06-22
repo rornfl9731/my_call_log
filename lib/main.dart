@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
                 DateTime.now().day - 1),
             end: DateTime(DateTime.now().year, DateTime.now().month,
                 DateTime.now().day + 3))),
-    HomeScreen2(),
+    // HomeScreen2(),
   ];
 
   void _onTap(int index) {
@@ -63,8 +63,8 @@ class _MyAppState extends State<MyApp> {
                   new BottomNavigationBarItem(icon: Icon(Icons.call), label: "기록"),
                   new BottomNavigationBarItem(
                       icon: Icon(Icons.today), label: "탑"),
-                  new BottomNavigationBarItem(
-                      icon: Icon(Icons.dashboard_rounded), label: "탑탑")
+                  // new BottomNavigationBarItem(
+                  //     icon: Icon(Icons.dashboard_rounded), label: "탑탑")
                 ],
               ),
             )),
